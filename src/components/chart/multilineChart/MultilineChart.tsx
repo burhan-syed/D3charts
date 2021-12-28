@@ -41,11 +41,6 @@ const MultilineChart = ({ data = [], margin = {left: 0, top: 0, right: 0, bottom
     yScaleForAxis
   } = controller;
 
-  useEffect(() => {
-    console.log(data);
-    console.log(controller);
-    
-  }, [data])
  
 
   return (
@@ -80,6 +75,7 @@ const MultilineChart = ({ data = [], margin = {left: 0, top: 0, right: 0, bottom
               xScale={xScale}
               yScale={yScale}
               color={color}
+              // animation={'none'}
             />
           ))}
           <Area data={data[0].items} xScale={xScale} yScale={yScale} />
@@ -101,7 +97,7 @@ const MultilineChart = ({ data = [], margin = {left: 0, top: 0, right: 0, bottom
               tickFormat={xTickFormat}
             />
             <Tooltip
-              // className="tooltip"
+              className="tooltip"
               anchorEl={overlayRef.current}
               width={width}
               height={height}

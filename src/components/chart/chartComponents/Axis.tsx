@@ -56,8 +56,8 @@ const Axis = ({
           .attr("opacity", 0.5)
           .style("font-weight", "normal");
       })
-      .on("mousemove.axisX", () => {
-        const [x] = d3.pointer(anchorEl);
+      .on("mousemove.axisX", (e) => {
+        const [x] = d3.pointer(e,anchorEl);
         const xDate = scale.invert(x);
         const textElements = d3.select(ref.current).selectAll("text");
         const data = textElements.data();

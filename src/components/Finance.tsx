@@ -32,39 +32,44 @@ const Finance = () => {
   const [data, setData] = useState<any[]>([]);
   const [value, setValue] = useState("");
   const getSymbol = async (Symbol: string) => {
-    const res = await (
-      await axios.get(
-        // `https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${Symbol}&apikey=${key}`
-        `${Symbol}.json`
-      )
-    ).data;
-    const timeseries = res?.["Weekly Adjusted Time Series"];
-    let timeStamps = Object.keys(timeseries).reverse();
-    timeStamps.forEach((t) => {
-
-      timeseries[t]["date"] = new Date(t);
-    });
-    const ObjToArray: Alpha[] = Object.values(timeseries);
-
-    setData((p) => [
-      ...p,
-      {
-        name: Symbol,
-        color: (Symbol === 'query' ? "#d53e4f" : "#0074E4"),
-        items: ObjToArray.map((o) => ({
-          date: o.date,
-          open: parseFloat(o["1. open"]),
-        })),
-      },
-    ]);
+    if (!data.some(s => s.name === Symbol)){
+      const res = await (
+        await axios.get(
+          `https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${Symbol}&apikey=${key}`
+          // `${Symbol}.json`
+        )
+      ).data;
+      const timeseries = res?.["Weekly Adjusted Time Series"];
+      let timeStamps = Object.keys(timeseries);//.reverse();
+      timeStamps.forEach((t) => {
+  
+        timeseries[t]["date"] = new Date(t);
+      });
+      const ObjToArray: Alpha[] = Object.values(timeseries);
+  
+      setData((p) => [
+        ...p,
+        {
+          name: Symbol,
+          color: (Symbol === 'query' ? "#d53e4f" : "#0074E4"),
+          items: ObjToArray.map((o) => ({
+            date: o.date,
+            open: parseFloat(o["1. open"]),
+          })),
+        },
+      ]);
+    } else {
+      console.log('already added');
+    }
+    
   };
 
   useEffect(() => {
-    getSymbol("query");
+    //getSymbol("query");
     return () => {};
   }, []);
   useEffect(() => {
-    console.log(data);
+    //console.log(data);
   }, [data]);
   return (
     <div>
@@ -77,7 +82,7 @@ const Finance = () => {
       />
       <button
         onClick={(e) => {
-          getSymbol('query2');
+          getSymbol(value);
           setValue("");
         }}
         className="border"
@@ -89,8 +94,8 @@ const Finance = () => {
           <Chart data={data} dimensions={dimensions} />
           <MultilineChart data={data} margin={dimensions.margin}/>
           <div className="h-10 bg-blue-400">
-            {data.map((s) => (
-              <div className="flex flex-row" key={s.name}>
+            {data.map((s,i) => (
+              <div className="flex flex-row" key={s.name+i}>
                 <p>{s.name}</p>
                 <button onClick={e => setData(p => p.filter(d => d.name !== s.name))}>{'(clear)'}</button>
               </div>

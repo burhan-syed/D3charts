@@ -28,7 +28,7 @@ const Line = ({
   color = "white",
   data = [],
   isSmooth = false,
-  animation = "left",
+  animation = "fadeIn",
   ...props
 }) => {
   const ref = useRef(null);
@@ -41,12 +41,18 @@ const Line = ({
       : 500;
     d3.select(ref.current)
       .attr("opacity", 1)
-      .attr("stroke-dasharray", `${totalLength},${totalLength}`)
+      .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
       .attr("stroke-dashoffset", totalLength)
       .transition()
       .duration(750)
       .ease(d3.easeLinear)
       .attr("stroke-dashoffset", 0);
+    // d3.select(ref.current).attr("stroke-dasharray", length + " " + length)
+    //     .attr("stroke-dashoffset", 0)
+    //       .transition()
+    //       .ease(d3.easeLinear)
+    //       .attr("stroke-dashoffset", length)
+    //       .duration(6000)
   }, []);
   const animateFadeIn = useCallback(() => {
     d3.select(ref.current)

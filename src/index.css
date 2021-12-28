@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.tooltip text {
+  font-size: 12px;
+  fill: #ffffff;
+}
+
+.tooltipLine {
+  stroke: #ff007a;
+  stroke-width: 1px;
+}
+
+.tooltipContent .contentTitle {
+  font-weight: bold;
+}
+
+.tooltipLinePoint {
+  fill: #ff007a;
+}

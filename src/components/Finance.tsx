@@ -32,7 +32,7 @@ const Finance = () => {
   const [data, setData] = useState<any[]>([]);
   const [value, setValue] = useState("");
   const getSymbol = async (Symbol: string) => {
-    if (!data.some(s => s.name === Symbol)){
+    if (!data.some((s) => s.name === Symbol)) {
       const res = await (
         await axios.get(
           `https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&symbol=${Symbol}&apikey=${key}`
@@ -40,18 +40,20 @@ const Finance = () => {
         )
       ).data;
       const timeseries = res?.["Weekly Adjusted Time Series"];
-      let timeStamps = Object.keys(timeseries);//.reverse();
+      let timeStamps = Object.keys(timeseries);
       timeStamps.forEach((t) => {
-  
         timeseries[t]["date"] = new Date(t);
       });
-      const ObjToArray: Alpha[] = Object.values(timeseries);
-  
+      let ObjToArray: Alpha[] = Object.values(timeseries);
+      ObjToArray.sort((a, b) =>
+        a.date > b.date ? 1 : a.date < b.date ? -1 : 0
+      );
+      // console.log(ObjToArray);
       setData((p) => [
         ...p,
         {
           name: Symbol,
-          color: (Symbol === 'query' ? "#d53e4f" : "#0074E4"),
+          color: Symbol === "query" ? "#d53e4f" : "#0074E4",
           items: ObjToArray.map((o) => ({
             date: o.date,
             open: parseFloat(o["1. open"]),
@@ -59,9 +61,8 @@ const Finance = () => {
         },
       ]);
     } else {
-      console.log('already added');
+      console.log("already added");
     }
-    
   };
 
   useEffect(() => {
@@ -90,14 +91,20 @@ const Finance = () => {
         find
       </button>
       {data?.length > 0 && (
-        <div className="flex flex-col space-y-5">
+        <div className="flex flex-col space-y-5 w-2xl">
           <Chart data={data} dimensions={dimensions} />
-          <MultilineChart data={data} margin={dimensions.margin}/>
+          <MultilineChart data={data} margin={dimensions.margin} />
           <div className="h-10 bg-blue-400">
-            {data.map((s,i) => (
-              <div className="flex flex-row" key={s.name+i}>
+            {data.map((s, i) => (
+              <div className="flex flex-row" key={s.name + i}>
                 <p>{s.name}</p>
-                <button onClick={e => setData(p => p.filter(d => d.name !== s.name))}>{'(clear)'}</button>
+                <button
+                  onClick={(e) =>
+                    setData((p) => p.filter((d) => d.name !== s.name))
+                  }
+                >
+                  {"(clear)"}
+                </button>
               </div>
             ))}
           </div>

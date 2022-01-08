@@ -1,4 +1,4 @@
-import {useEffect, useRef, useCallback} from 'react';
+import { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
 
 // Line.propTypes = {
@@ -28,7 +28,7 @@ const Line = ({
   color = "white",
   data = [],
   isSmooth = false,
-  animation = "fadeIn",
+  animation = "left",
   ...props
 }) => {
   const ref = useRef(null);
@@ -95,8 +95,8 @@ const Line = ({
 
   const line = d3
     .line()
-    .x((d) => xScale(d['date']))
-    .y((d) => yScale(d['open']));
+    .x((d) => xScale(d["date"]))
+    .y((d) => yScale(d["open"]));
 
   const d = line(data);
 
@@ -112,7 +112,5 @@ const Line = ({
     />
   );
 };
-
-
 
 export default Line;
